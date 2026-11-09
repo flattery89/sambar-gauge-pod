@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sambar Gauge Pod</title>
+<meta name="description" content="Turn-by-turn directions, music, and a tachometer in a 52 mm gauge pod for a 1992 Subaru Sambar kei truck.">
+<style>
+  :root {
+    --bg: #0d0e10; --panel: #16181b; --line: #26292e; --text: #eef0f3; --muted: #9aa0a8; --dim: #6b7078;
+    --white: #ffffff; --amber: #ffb020; --green: #33d17a; --blue: #2f9bff; --red: #ff5a52;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  h1, h2, h3 { line-height: 1.15; margin: 0; }
+  h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 18px; }
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+
+  /* hero */
+  .hero { padding: 64px 0 40px; text-align: center; }
+  .kicker { color: var(--amber); font-size: 13px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+  .hero h1 { font-size: clamp(34px, 6vw, 58px); font-weight: 800; margin: 12px 0 14px; letter-spacing: -.02em; }
+  .hero p { color: var(--muted); font-size: 18px; max-width: 640px; margin: 0 auto; }
+  .gauges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+  .gauges figure { margin: 0; }
+  .gauges img { width: 100%; height: auto; display: block; border-radius: 50%; }
+  figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; text-align: center; }
+  figcaption b { color: var(--text); font-weight: 600; }
+
+  /* features */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .card .ic { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 12px; }
+  .card h3 { font-size: 16px; margin-bottom: 4px; }
+  .card p { color: var(--muted); margin: 0; font-size: 14px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 99px; margin-top: 10px; }
+  .t-done { background: rgba(51,209,122,.14); color: var(--green); }
+  .t-wip  { background: rgba(255,176,32,.14); color: var(--amber); }
+  .t-next { background: rgba(154,160,168,.14); color: var(--muted); }
+
+  /* diagram */
+  .diagram { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .parts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 14px; }
+  .part { border-left: 3px solid var(--line); padding: 4px 0 4px 12px; }
+  .part b { display: block; font-size: 15px; }
+  .part span { color: var(--muted); font-size: 13px; }
+
+  /* screens gallery */
+  .screens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .screens img { width: 100%; display: block; border-radius: 50%; }
+  .waze-row { display: grid; grid-template-columns: 1.2fr auto 1fr; gap: 22px; align-items: center; margin-top: 34px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .waze-row img { width: 100%; display: block; }
+  .waze-row .card-img { border-radius: 18px; }
+  .waze-row .gauge-img { border-radius: 50%; max-width: 280px; margin: 0 auto; }
+  .arrow { font-size: 34px; color: var(--dim); }
+  .note { color: var(--muted); font-size: 14px; margin-top: 10px; }
+
+  /* progress */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .list { list-style: none; padding: 0; margin: 0; }
+  .list li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .list li:last-child { border-bottom: 0; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; margin-top: 1px; }
+  .d-done { background: rgba(51,209,122,.16); color: var(--green); }
+  .d-wip  { background: rgba(255,176,32,.16); color: var(--amber); }
+  .d-next { background: rgba(154,160,168,.14); color: var(--muted); }
+  .list b { display: block; font-size: 15px; }
+  .list span { color: var(--muted); font-size: 14px; }
+  .lessons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+  .lesson { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .lesson .big { font-size: 26px; font-weight: 800; }
+  .lesson p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; color: var(--dim); font-size: 13px; text-align: center; }
+
+  @media (max-width: 760px) {
+    .gauges { grid-template-columns: 1fr; max-width: 340px; margin-left: auto; margin-right: auto; }
+    .features, .lessons { grid-template-columns: 1fr; }
+    .parts { grid-template-columns: 1fr 1fr; }
+    .screens { grid-template-columns: 1fr 1fr; }
+    .cols { grid-template-columns: 1fr; }
+    .waze-row { grid-template-columns: 1fr; text-align: center; }
+    .arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="kicker">1992 Subaru Sambar · Build log</div>
+  <h1>A smart gauge for a kei truck</h1>
+  <p>One round 52 mm gauge that shows turn-by-turn directions, what's playing, and (coming soon) engine RPM. It runs off the phone's wireless CarPlay, with no screen added to the dash.</p>
+  <div class="gauges">
+    <figure><img src="img/gauge-turn.png" alt="Gauge showing a left turn in 400 feet onto Main Street"><figcaption><b>Directions</b>: Apple &amp; Google Maps</figcaption></figure>
+    <figure><img src="img/gauge-music.png" alt="Gauge showing the song Open Road with album art, progress ring and controls"><figcaption><b>Music</b>: art, progress, controls</figcaption></figure>
+    <figure><img src="img/gauge-waze.png" alt="Gauge showing the Waze turn card"><figcaption><b>Waze</b>: live turn card</figcaption></figure>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>The goal</h2>
+    <div class="features">
+      <div class="card">
+        <div class="ic" style="background:rgba(255,255,255,.08)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20V10a4 4 0 0 1 4-4h6"/><path d="M15 2l4 4-4 4"/></svg></div>
+        <h3>Turn-by-turn, Beeline style</h3>
+        <p>A big arrow, the distance to the turn, and the street name. The ring fills as you close in and turns amber in the last 500 ft.</p>
+        <span class="tag t-done">Working</span>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:rgba(51,209,122,.14)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#33d17a" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg></div>
+        <h3>Works with Waze, Apple Maps and Google Maps</h3>
+        <p>Use whichever app you like. The gauge shows a directions screen only while an app is actually navigating.</p>
+        <span class="tag t-wip">Waze being refined</span>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:rgba(47,155,255,.14)"><svg width="22" height="22" viewBox="0 0 24 24" fill="#2f9bff"><path d="M9 18V5l12-2v13" fill="none" stroke="#2f9bff" stroke-width="2.4"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h3>Music on the gauge</h3>
+        <p>Album art fills the dial, with song, artist, time left, and play, pause and skip you can tap.</p>
+        <span class="tag t-done">Working</span>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:rgba(255,176,32,.14)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffb020" stroke-width="2.4" stroke-linecap="round"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l5-5"/></svg></div>
+        <h3>Tachometer</h3>
+        <p>The Sambar never had a tach. The plan is to read RPM from the engine's ignition signal, with a redline around 6,500.</p>
+        <span class="tag t-next">After parts arrive</span>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:rgba(255,255,255,.08)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></svg></div>
+        <h3>Sound through the truck radio</h3>
+        <p>Music and spoken directions go from the gauge to the truck's radio over Bluetooth.</p>
+        <span class="tag t-next">After parts arrive</span>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:rgba(255,255,255,.08)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+        <h3>iPhone and Android</h3>
+        <p>Wireless CarPlay works today. The same adapter also does Android Auto, which still needs a test on a real Android phone.</p>
+        <span class="tag t-wip">iPhone done</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 1000 330" role="img" aria-label="Phone connects wirelessly to the CarPlay adapter, which plugs into a Raspberry Pi. The Pi drives the round gauge screen, sends sound to the truck radio over Bluetooth, and reads RPM from the engine.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7078"/></marker>
+        </defs>
+        <g font-family="-apple-system, Helvetica, Arial" text-anchor="middle">
+          <!-- phone -->
+          <rect x="30" y="95" width="92" height="150" rx="16" fill="#1f2226" stroke="#3a3e44" stroke-width="2"/>
+          <rect x="40" y="110" width="72" height="112" rx="6" fill="#0d0e10"/>
+          <path d="M60 175 L60 158 Q60 148 70 148 L82 148" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <polygon points="80,138 96,148 80,158" fill="#fff"/>
+          <text x="76" y="272" fill="#eef0f3" font-size="16" font-weight="700">Phone</text>
+          <text x="76" y="292" fill="#9aa0a8" font-size="13">Waze · Maps · Music</text>
+
+          <!-- wireless -->
+          <line x1="132" y1="170" x2="262" y2="170" stroke="#6b7078" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+          <text x="197" y="155" fill="#9aa0a8" font-size="13">wireless CarPlay</text>
+
+          <!-- adapter -->
+          <rect x="270" y="130" width="130" height="80" rx="14" fill="#1f2226" stroke="#3a3e44" stroke-width="2"/>
+          <circle cx="380" cy="150" r="5" fill="#33d17a"/>
+          <text x="335" y="177" fill="#eef0f3" font-size="15" font-weight="700">CarPlay</text>
+          <text x="335" y="196" fill="#eef0f3" font-size="15" font-weight="700">adapter</text>
+          <text x="335" y="240" fill="#9aa0a8" font-size="13">Carlinkit CPC200</text>
+
+          <!-- usb -->
+          <line x1="408" y1="170" x2="508" y2="170" stroke="#6b7078" stroke-width="2.5" marker-end="url(#ah)"/>
+          <text x="458" y="155" fill="#9aa0a8" font-size="13">USB</text>
+
+          <!-- pi -->
+          <rect x="516" y="115" width="150" height="110" rx="12" fill="#14301f" stroke="#2f7a4c" stroke-width="2"/>
+          <g fill="#2f7a4c"><rect x="532" y="123" width="6" height="6"/><rect x="544" y="123" width="6" height="6"/><rect x="556" y="123" width="6" height="6"/><rect x="568" y="123" width="6" height="6"/><rect x="580" y="123" width="6" height="6"/><rect x="592" y="123" width="6" height="6"/></g>
+          <text x="591" y="172" fill="#eef0f3" font-size="15" font-weight="700">Raspberry Pi</text>
+          <text x="591" y="192" fill="#9aa0a8" font-size="13">the brains</text>
+
+          <!-- to gauge -->
+          <line x1="674" y1="150" x2="790" y2="88" stroke="#6b7078" stroke-width="2.5" marker-end="url(#ah)"/>
+          <circle cx="850" cy="70" r="52" fill="url(#gz)" />
+          <defs><radialGradient id="gz" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#5a5d63"/><stop offset="1" stop-color="#16171a"/></radialGradient></defs>
+          <circle cx="850" cy="70" r="44" fill="#000"/>
+          <circle cx="850" cy="70" r="40" fill="none" stroke="#ffb020" stroke-width="4" stroke-dasharray="170 252" transform="rotate(-90 850 70)"/>
+          <path d="M846 84 L846 68 Q846 60 854 60 L860 60" stroke="#ffb020" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <polygon points="858,52 870,60 858,68" fill="#ffb020"/>
+          <text x="935" y="66" fill="#eef0f3" font-size="15" font-weight="700" text-anchor="start" dx="-12">52 mm</text>
+          <text x="935" y="84" fill="#9aa0a8" font-size="13" text-anchor="start" dx="-12">gauge</text>
+
+          <!-- to radio -->
+          <line x1="674" y1="190" x2="790" y2="230" stroke="#6b7078" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+          <text x="718" y="232" fill="#9aa0a8" font-size="13">Bluetooth</text>
+          <rect x="800" y="210" width="120" height="44" rx="8" fill="#1f2226" stroke="#3a3e44" stroke-width="2"/>
+          <circle cx="822" cy="232" r="10" fill="none" stroke="#6b7078" stroke-width="3"/>
+          <rect x="842" y="225" width="60" height="14" rx="3" fill="#0d0e10"/>
+          <text x="860" y="276" fill="#eef0f3" font-size="15" font-weight="700">Truck radio</text>
+
+          <!-- engine -->
+          <line x1="591" y1="305" x2="591" y2="233" stroke="#ffb020" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#ah)"/>
+          <text x="591" y="322" fill="#ffb020" font-size="13">RPM signal from engine (planned)</text>
+        </g>
+      </svg>
+    </div>
+    <div class="parts">
+      <div class="part" style="border-color:#33d17a"><b>Carlinkit CPC200-CCPA</b><span>Wireless CarPlay / Android Auto adapter. On the bench.</span></div>
+      <div class="part" style="border-color:#ffb020"><b>Raspberry Pi</b><span>Runs the gauge and the radio link. On order.</span></div>
+      <div class="part" style="border-color:#ffb020"><b>Round touchscreen</b><span>Sized to drop into the open 52 mm gauge pod.</span></div>
+      <div class="part" style="border-color:#3a3e44"><b>EN07 engine</b><span>658 cc supercharged 4-cyl. No OBD port, so RPM comes off the ignition.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What's working, captured from the bench</h2>
+    <div class="screens">
+      <figure style="margin:0"><img src="img/gauge-far.png" alt="Right turn in 1.2 miles"><figcaption><b>Far out</b>: white ring</figcaption></figure>
+      <figure style="margin:0"><img src="img/gauge-turn.png" alt="Left turn in 400 feet, amber"><figcaption><b>Turn coming</b>: goes amber</figcaption></figure>
+      <figure style="margin:0"><img src="img/gauge-round.png" alt="Roundabout, second exit"><figcaption><b>Roundabouts</b>: exit number</figcaption></figure>
+      <figure style="margin:0"><img src="img/gauge-music.png" alt="Music screen"><figcaption><b>Music</b>: tap to control</figcaption></figure>
+    </div>
+    <p class="note">Swipe or tap to cycle screens. Dots along the bottom show what's available right now. Directions come up on their own when a route starts and go away when it ends.</p>
+
+    <div class="waze-row">
+      <div>
+        <img class="card-img" src="img/waze-card.png" alt="Waze's turn card as it appears on the CarPlay screen">
+        <p class="note" style="text-align:center">Waze on the CarPlay screen</p>
+      </div>
+      <div class="arrow">→</div>
+      <div>
+        <img class="gauge-img" src="img/gauge-waze.png" alt="Same card shown on the gauge">
+        <p class="note" style="text-align:center">The same card, live on the gauge</p>
+      </div>
+    </div>
+    <p class="note">Apple Maps sends the gauge its directions as data. Waze sends none, so the gauge picks Waze's turn card out of the CarPlay picture as it plays. (Street names in these images are placeholders.)</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Progress</h2>
+    <div class="cols">
+      <div class="card">
+        <h3 style="margin-bottom:6px">Done</h3>
+        <ul class="list">
+          <li><div class="dot d-done">✓</div><div><b>Talking to the CarPlay adapter</b><span>Our own software connects to it over USB and reads everything the phone sends.</span></div></li>
+          <li><div class="dot d-done">✓</div><div><b>Apple Maps directions on the gauge</b><span>Arrow, distance, street, arrival time, roundabout exits.</span></div></li>
+          <li><div class="dot d-done">✓</div><div><b>Music screen</b><span>Album art, song progress, time left, play / pause / skip.</span></div></li>
+          <li><div class="dot d-done">✓</div><div><b>Waze on the gauge</b><span>Live turn card, shown only while Waze is navigating.</span></div></li>
+          <li><div class="dot d-done">✓</div><div><b>Directions and music at the same time</b><span>Held steady on a real CarPlay connection.</span></div></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:6px">Still to do</h3>
+        <ul class="list">
+          <li><div class="dot d-wip">1</div><div><b>Make Waze rock solid</b><span>Find the turn card wherever it is on screen, then read it and redraw it in the gauge's own style.</span></div></li>
+          <li><div class="dot d-next">2</div><div><b>Move onto the Raspberry Pi</b><span>Starts on its own with the key, with nothing to shut down.</span></div></li>
+          <li><div class="dot d-next">3</div><div><b>Sound to the truck radio</b><span>Bluetooth from the Pi to the radio.</span></div></li>
+          <li><div class="dot d-next">4</div><div><b>Tachometer</b><span>Wire the RPM signal, add a tach screen.</span></div></li>
+          <li><div class="dot d-next">5</div><div><b>Install in the truck</b><span>Screen in the 52 mm pod, wiring, road test.</span></div></li>
+          <li><div class="dot d-next">6</div><div><b>Android Auto</b><span>Test with a real Android phone.</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson"><div class="big" style="color:var(--red)">0</div><p>Directions messages Waze sent across about 45 test sessions. That's why Waze has to be read off the screen.</p></div>
+      <div class="lesson"><div class="big" style="color:var(--amber)">5 sec</div><p>How long CarPlay stayed up with the adapter's "dashboard screen" setting on. Turning it off fixed the connection.</p></div>
+      <div class="lesson"><div class="big" style="color:var(--blue)">Skip only</div><p>The adapter can play, pause and skip, but it can't scrub or fast-forward within a song.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  Built by Joe Flattery for his 1992 Subaru Sambar · Updated November 9, 2026
+</footer>
+</body>
+</html>
